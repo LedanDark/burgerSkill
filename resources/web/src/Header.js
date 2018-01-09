@@ -4,7 +4,7 @@ class Header extends Component {
   render() {
     return (
       <div style={{marginBottom: '20px'}}>
-        <h1>FlightFinder</h1>
+        <h1>BurgerStore</h1>
       </div>
     );
   }

@@ -11,14 +11,13 @@ class ItemContainer extends Component {
 
   render() {
     const items = this.props.items;
-
+    console.log(items);
     return (
       <table ref="table" className="table table-striped">
         <thead>
           <tr>
+            <th>Type</th>
             <th>Name</th>
-            <th>Price</th>
-            <th>Size</th>
           </tr>
         </thead>
         <tbody>
@@ -27,9 +26,8 @@ class ItemContainer extends Component {
               return <Item
                 key={item.id}
                 id={item.id}
+                type={item.type}
                 name={item.name}
-                price={item.price}
-                size={item.size}
                 selectItem={(id) => this.props.selectItem(id)}
               />;
             })
@@ -39,4 +37,4 @@ class ItemContainer extends Component {
     );
   }
 }
-export default itemsContainer;
+export default ItemContainer;
