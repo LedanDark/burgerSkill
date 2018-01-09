@@ -1,6 +1,7 @@
 package furhatos.app.burger
 
 import furhatos.nlu.EnumEntity
+import furhatos.nlu.EnumItem
 import furhatos.nlu.Intent
 import furhatos.util.Language
 
@@ -16,6 +17,7 @@ class CombinedOrderIntent : Intent() {
 
     override fun getExamples(lang: Language?): List<String> {
         return listOf(
+                "a burger",
                 "I want a large burger with fries",
                 "I want a burger",
                 "I would like to order a burger",
@@ -27,31 +29,36 @@ class CombinedOrderIntent : Intent() {
     }
 }
 
+fun makeWantIntentList(marker:String):List<String> {
+    return listOf(
+            marker,
+            "a $marker",
+            "I want a $marker",
+            "I'd like a $marker",
+            "gimme a $marker",
+            "I would like a $marker",
+            "could I have a $marker",
+            "I'll have a $marker",
+            "I'll take a $marker"
+    )
+}
+
 class MainIntent : Intent() {
     @RecordField
     var main: MainItemEntity? = null
 
     override fun getExamples(lang: Language?): List<String> {
-        return listOf(
-                "a @main",
-                "I want a @main",
-                "I'd like a @main",
-                "gimme a @main"
-        )
+        return makeWantIntentList("@main")
     }
 }
+
 
 class SideIntent : Intent() {
     @RecordField
     var side: SideItemEntity? = null
 
     override fun getExamples(lang: Language?): List<String> {
-        return listOf(
-                "a @side",
-                "I want a @side",
-                "I'd like a @side",
-                "gimme a @side"
-        )
+        return makeWantIntentList("@side")
     }
 }
 
@@ -61,16 +68,11 @@ class DrinkIntent : Intent() {
     var drink: DrinkEntity? = null
 
     override fun getExamples(lang: Language?): List<String> {
-        return listOf(
-                "a @drink",
-                "I want a @drink",
-                "I'd like a @drink",
-                "gimme a @drink"
-        )
+        return makeWantIntentList("@drink")
     }
 }
 
-class ListCommandsIntent: Intent(){
+class ListCommandsIntent : Intent() {
     override fun getExamples(lang: Language?): List<String> {
         return listOf(
                 "what are the options",
@@ -89,12 +91,13 @@ class MainItemEntity : EnumEntity() {
     }
 }
 
+
 class SideItemEntity : EnumEntity() {
     override fun getEnum(lang: Language?): List<String> {
         return listOf(
                 "fries",
                 "onion rings",
-                "sweet potatoes"
+                "sweet potato fries"
         )
     }
 }
