@@ -5,7 +5,9 @@ import furhatos.event.senses.SenseUserLeave
 import furhatos.flow.kotlin.FlowEvent
 import furhatos.flow.kotlin.State
 import furhatos.flow.kotlin.state
+import furhatos.nlu.EnumEntity
 import furhatos.nlu.common.No
+import furhatos.nlu.common.Yes
 import furhatos.records.GenericRecord.RecordField
 
 
@@ -50,7 +52,11 @@ val RequestOrder: State = state(Dialog) {
         ask("How can I help you")
     }
 
-    onResponse<OrderItem> {
+    onResponse<ListCommandsIntent> {
+        ask("would you like a burger, a salad or a cheeseburger")
+    }
+
+    onResponse<CombinedOrderIntent> {
         main = it.intent.main
         side = it.intent.side
         drink = it.intent.drink
@@ -78,7 +84,7 @@ val RequestMain = state(Dialog) {
         ask("what main order would you like?")
     }
 
-    onResponse<MainItemIntent> {
+    onResponse<MainIntent> {
         main = it.intent.main
         goto(CheckOrder)
     }
@@ -89,8 +95,7 @@ val RequestMain = state(Dialog) {
     }
 
     onResponse<ListCommandsIntent> {
-        say("you can choose between " + SideItemEntity().optionsToText())
-        reentry()
+        ask("you can choose between " + SideItemEntity().optionsToText())
     }
 }
 
@@ -99,7 +104,7 @@ val RequestSide = state(Dialog) {
         ask("would you like a side with that?")
     }
 
-    onResponse<SideItemIntent> {
+    onResponse<SideIntent> {
         side = it.intent.side
         goto(CheckOrder)
     }
@@ -110,9 +115,12 @@ val RequestSide = state(Dialog) {
         goto(CheckOrder)
     }
 
+    onResponse<Yes> {
+        ask("ok, what would you like?")
+    }
+
     onResponse<ListCommandsIntent> {
-        say("you can choose between " + SideItemEntity().optionsToText())
-        reentry()
+        ask("we've got " + SideItemEntity().optionsToText())
     }
 }
 
@@ -121,7 +129,7 @@ val RequestDrink = state(Dialog) {
         ask("how about something to drink?")
     }
 
-    onResponse<DrinkItemIntent> {
+    onResponse<DrinkIntent> {
         drink = it.intent.drink
         goto(CheckOrder)
     }
@@ -132,14 +140,36 @@ val RequestDrink = state(Dialog) {
         goto(CheckOrder)
     }
 
+    onResponse<Yes> {
+        ask("ok, what would you like?")
+    }
+
     onResponse<ListCommandsIntent> {
-        say("you can choose between " + DrinkEntity().optionsToText())
-        reentry()
+        ask("we have " + DrinkEntity().optionsToText())
     }
 }
 
 val OrderPlaced = state(Dialog) {
     onEntry {
-        say("ok! Your order has been placed")
+
+        fun nullOrNone(x: EnumEntity?): Boolean {
+            return x == null || x.value == "none"
+        }
+
+        var orderDescription = "one ${main!!.value}"
+
+        if (!nullOrNone(side) && nullOrNone(drink)) {
+            orderDescription = "one ${main!!.value} with a side of ${side!!.value}"
+        }
+
+        if (!nullOrNone(side) && !nullOrNone(drink)) {
+            orderDescription = "one ${main!!.value} with a side of ${side!!.value} and a ${drink!!.value}"
+        }
+
+        if (nullOrNone(side) && !nullOrNone(drink)) {
+            orderDescription = "one ${main!!.value} and a ${drink!!.value}"
+        }
+
+        say("ok! One $orderDescription coming right up")
     }
 }
