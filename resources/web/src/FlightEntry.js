@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import Segment from './Segment.js';
 
-class FlightEntry extends Component {
+class Item extends Component {
 
   componentWillMount() {
     this.setState({
@@ -10,7 +10,7 @@ class FlightEntry extends Component {
   }
 
   handleClick() {
-    this.props.selectFlight(this.props.id);
+    this.props.selectItem(this.props.id);
     this.setState({ success: !this.state.success })
   }
 
