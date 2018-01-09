@@ -1,1 +1,9 @@
-resources/web/node_nodules/*
+resources/web/node_modules/
+.gradle
+*.iml
+.idea
+logs/
+/build/
+gradle-app.setting
+!gradle-wrapper.jar
+.gradletasknamecache
