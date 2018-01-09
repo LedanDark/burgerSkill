@@ -4,7 +4,7 @@ import furhatos.nlu.EnumEntity
 import furhatos.nlu.Intent
 import furhatos.util.Language
 
-class OrderItem : Intent() {
+class CombinedOrderIntent : Intent() {
     @RecordField
     var main: MainItemEntity? = null
 
@@ -21,12 +21,13 @@ class OrderItem : Intent() {
                 "I would like to order a burger",
                 "I would like to order a burger with a side of fries",
                 "I'd like a salad with side of fries and a pepsi to drink",
+                "I'd like a cheeseburger",
                 "I want a salad with a pepsi"
         )
     }
 }
 
-class MainItemIntent : Intent() {
+class MainIntent : Intent() {
     @RecordField
     var main: MainItemEntity? = null
 
@@ -40,7 +41,7 @@ class MainItemIntent : Intent() {
     }
 }
 
-class SideItemIntent : Intent() {
+class SideIntent : Intent() {
     @RecordField
     var side: SideItemEntity? = null
 
@@ -55,7 +56,7 @@ class SideItemIntent : Intent() {
 }
 
 
-class DrinkItemIntent : Intent() {
+class DrinkIntent : Intent() {
     @RecordField
     var drink: DrinkEntity? = null
 
@@ -72,7 +73,8 @@ class DrinkItemIntent : Intent() {
 class ListCommandsIntent: Intent(){
     override fun getExamples(lang: Language?): List<String> {
         return listOf(
-                "what are the options"
+                "what are the options",
+                "what do you have"
         )
     }
 }
