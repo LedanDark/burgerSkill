@@ -1,26 +1,29 @@
 import React, {Component} from 'react';
 
 class Item extends Component {
-
-  componentWillMount() {
-    this.setState({
-       success: false,
-    })
+  constructor(props) {
+    super(props);
   }
 
-  handleClick() {
-    this.props.selectItem(this.props.id);
-    this.setState({ success: !this.state.success })
+  getItemContent() {
+    if(this.props.value) {
+      if(this.props.value.value === 'none') {
+        <h3>None</h3>
+      }
+      return (
+        <div>
+          <h3>{ this.props.value.value }</h3>
+          <img className="orderImage" src={`src\\img\\${this.props.value.value.replace(/ /g,'_')}.png`} />
+        </div>
+      );
+    }
+    return <h3>Not Selected</h3>
   }
-
   render() {
-    const success = this.state.success;
-
     return (
-      <tr className={success ? "success" : ""} onClick={() => this.handleClick()}>
-        <td>{this.props.type}</td>
-        <td>{this.props.name}</td>
-      </tr>
+      <div className="row main orderHolder">
+        {this.getItemContent()}
+      </div>
     )
   }
 }

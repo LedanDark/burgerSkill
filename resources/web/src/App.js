@@ -1,68 +1,53 @@
 import React, {Component} from 'react'
-import ItemContainer from './ItemContainer'
-import Header from './Header'
+import Item from './Item'
 
 class App extends Component {
 
   constructor(props) {
     super(props);
-    var temp = []
     this.state = {
-      "main": {
-        "value": "Hamburger"
-      },
-      "side": {
-        "value": "Fries"
-      },
-      "drink": {
-        "value": "Coke Zero"
-      }
-    };
-
-    this.system = parent.system;
-
-    if (this.system) {
-      this.system.onEvent = function (name, params) {
-        if (name == "action.item.results") {
-          if (params.results) {
-              console.log(params.results);
-              this.setState({ "items": params.results })
-          }
-          else {
-            this.setState({ "items": [] })
-          }
-
-        }
-      }.bind(this)
-    }
-    else {
-      console.log("Furhat system not loaded");
+      main: undefined,
+      side: undefined,
+      drink: undefined
     }
   }
 
-  selectItem(id) {
-    console.log(this.system);
-    if (this.system) {
-      this.system.sendEvent("action.item.select", {
-        id
-      })
-    }
-    else {
-      console.log("Can't send event to Furhat since Furhat system not loaded");
-    }
+  componentDidMount() {
+    var socket = new WebSocket(`ws://localhost:80/api`);
+    socket.onopen = (event) => {
+      console.log('connected')
+      socket.send(JSON.stringify( { event_name: 'furhatos.event.actions.ActionRealTimeAPISubscribe', name: 'furhatos.app.burger.OrderUpdateEvent' }));
+    };
+    socket.onmessage = (event) => {
+      var data = JSON.parse(event.data);
+      if (data.event_name == 'furhatos.app.burger.OrderUpdateEvent') {
+        console.log(data)
+        this.setState({main: data.main, side: data.side, drink: data.drink})
+      }
+    };
+  }
+
+  componentDidUpdate() {
+    console.log('update')
   }
 
   render() {
     return (
-      <div style={{'marginTop': '50px'}} className="container">
-        <Header/>
-        { this.state.length == 0 ? <h3>Hello, my eyes are up there!</h3> :
-          <ItemContainer
-          items={this.state}
-          selectItem={(id) => this.selectItem(id)}
-          />
-        }
-
+      <div className="container-fluid">
+        <div className="row">
+            <div className="col-lg-4 order">
+              <h2>Main</h2>
+              <Item value={this.state.main} />
+            </div>
+            <div className="col-lg-4 order">
+              <h2>Side</h2>
+              <Item value={this.state.side} />
+            </div>
+            <div className="col-lg-4 order">
+              <h2>Drink</h2>
+              <Item value={this.state.drink}/>
+            </div>
+        </div>
       </div>
     );
   }

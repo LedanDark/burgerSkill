@@ -9,6 +9,7 @@ import furhatos.nlu.EnumEntity
 import furhatos.nlu.common.No
 import furhatos.nlu.common.Yes
 import furhatos.records.GenericRecord.RecordField
+import furhatos.skills.SkillGUI
 
 
 class OrderUpdateEvent(
@@ -21,6 +22,7 @@ var drink: DrinkEntity? = null
 var main: MainItemEntity? = null
 var side: SideItemEntity? = null
 
+var gui = SkillGUI("Burger GUI", "c:\\web")
 
 val Dialog: State = state {
     onEvent<SenseUserLeave> {
