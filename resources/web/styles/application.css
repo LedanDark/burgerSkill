@@ -44,3 +44,12 @@ p{
     margin: auto;
     padding: 40px;
 }
+
+.orderRemove{
+    float: right;
+    font-size: 14px;
+    background: #ff5553;
+    padding: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+}

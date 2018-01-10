@@ -10,25 +10,16 @@ class App extends Component {
       side: undefined,
       drink: undefined
     }
-  }
-
-  componentDidMount() {
-    var socket = new WebSocket(`ws://localhost:80/api`);
-    socket.onopen = (event) => {
-      console.log('connected')
-      socket.send(JSON.stringify( { event_name: 'furhatos.event.actions.ActionRealTimeAPISubscribe', name: 'furhatos.app.burger.OrderUpdateEvent' }));
+    this.socket = new WebSocket('ws://localhost:80/api');
+    this.socket.onopen = (event) => {
+      this.socket.send(JSON.stringify( { event_name: 'furhatos.event.actions.ActionRealTimeAPISubscribe', name: 'furhatos.app.burger.OrderUpdateEvent' }));
     };
-    socket.onmessage = (event) => {
+    this.socket.onmessage = (event) => {
       var data = JSON.parse(event.data);
       if (data.event_name == 'furhatos.app.burger.OrderUpdateEvent') {
-        console.log(data)
         this.setState({main: data.main, side: data.side, drink: data.drink})
       }
     };
-  }
-
-  componentDidUpdate() {
-    console.log('update')
   }
 
   render() {
@@ -37,15 +28,15 @@ class App extends Component {
         <div className="row">
             <div className="col-lg-4 order">
               <h2>Main</h2>
-              <Item value={this.state.main} />
+              <Item value={this.state.main} furhat={this.socket} />
             </div>
             <div className="col-lg-4 order">
               <h2>Side</h2>
-              <Item value={this.state.side} />
+              <Item value={this.state.side} furhat={this.socket} />
             </div>
             <div className="col-lg-4 order">
               <h2>Drink</h2>
-              <Item value={this.state.drink}/>
+              <Item value={this.state.drink} furhat={this.socket} />
             </div>
         </div>
       </div>
