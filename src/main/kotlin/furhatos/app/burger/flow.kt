@@ -172,6 +172,7 @@ val OrderPlaced = state(Dialog) {
             orderDescription = "one ${main!!.value} and a ${drink!!.value}"
         }
 
-        say("ok! One $orderDescription coming right up")
+        say("ok! $orderDescription coming right up")
+        goto(Idle)
     }
 }

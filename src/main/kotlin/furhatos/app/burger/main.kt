@@ -3,7 +3,6 @@ package furhatos.app.burger
 import furhatos.event.CustomEvent
 import furhatos.flow.kotlin.Flow
 import furhatos.skills.Skill
-import kotlin.reflect.full.declaredMemberExtensionProperties
 import kotlin.reflect.full.declaredMemberProperties
 
 class BurgerSkill : Skill() {
